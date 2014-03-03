@@ -13,5 +13,18 @@ namespace _1._4.GissaDetHemligaTalet
         {
 
         }
+
+        protected void GuessButton_Click(object sender, EventArgs e)
+        {
+            if (IsValid)
+            {
+            }
+
+        }
+
+        protected void RestartButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
