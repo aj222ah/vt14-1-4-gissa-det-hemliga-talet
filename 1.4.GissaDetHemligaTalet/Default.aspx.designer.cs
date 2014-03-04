@@ -76,13 +76,13 @@ namespace _1._4.GissaDetHemligaTalet {
         protected global::System.Web.UI.WebControls.Button GuessButton;
         
         /// <summary>
-        /// EndResultLabel control.
+        /// ResultLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label EndResultLabel;
+        protected global::System.Web.UI.WebControls.Label ResultLabel;
         
         /// <summary>
         /// PreviousGuessesLabel control.

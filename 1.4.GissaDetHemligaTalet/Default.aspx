@@ -21,7 +21,7 @@
                     <asp:RangeValidator ID="CurrentGuessValidNumber" runat="server" ErrorMessage="Din gissning måste vara ett heltal mellan  1 och 100." Display="Dynamic" ControlToValidate="CurrentGuess" Type="Integer" MinimumValue="1" MaximumValue="100"></asp:RangeValidator>
             
                     <asp:Button ID="GuessButton" runat="server" Text="Skicka" OnClick="GuessButton_Click" CssClass="button" /><br />
-                    <asp:Label ID="EndResultLabel" runat="server" Text="" Visible="False"></asp:Label>
+                    <asp:Label ID="ResultLabel" runat="server" Text="" Visible="False"></asp:Label>
                     <asp:Label ID="PreviousGuessesLabel" runat="server" Text="" Visible="False"></asp:Label><br />
                     <asp:Button ID="RestartButton" runat="server" Text="Slumpa fram ett nytt hemligt tal" Visible="False" OnClick="RestartButton_Click" CssClass="button" />
                 </div>
