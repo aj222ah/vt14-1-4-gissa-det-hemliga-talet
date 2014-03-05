@@ -76,3 +76,7 @@ form {
     font-family: Georgia;
     font-size: 12pt;
 }
+
+.error {
+    color: red;
+}

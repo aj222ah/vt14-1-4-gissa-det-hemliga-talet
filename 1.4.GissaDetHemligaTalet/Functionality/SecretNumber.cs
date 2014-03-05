@@ -8,7 +8,7 @@ namespace _1._4.GissaDetHemligaTalet.Functionality
     public class SecretNumber : System.Web.UI.Page
     {
         private int _number;
-        private List<int> _previousGuesses = new List<int>();
+        private List<int> _previousGuesses;
         public enum Outcome { Low, Correct, High, NoMoreGuesses, PreviousGuess };
 
         // Konstanter för antal gissningar och min- och maxnummer för gissning
@@ -19,18 +19,17 @@ namespace _1._4.GissaDetHemligaTalet.Functionality
         public int AddGuess
         {
             get { return _previousGuesses[_previousGuesses.Count]; }
-            private set { _previousGuesses[_previousGuesses.Count] = value; }
+            private set { _previousGuesses.Add(value); }
         }
 
-        public int? Count { 
-            get { return Session["Count"] as int?; }
-            private set { Session["Count"] = value; }
+        public int? Count {
+            get { return _previousGuesses.Count as int?; }
         }
         // Kontrollerar hur många gissningar som gjorts
         public bool GuessAllowed {
             get
             {
-                if (Count < MaxNoOfGuesses)
+                if (Count + 1 < MaxNoOfGuesses)
                 {
                     return true;
                 }
@@ -41,15 +40,15 @@ namespace _1._4.GissaDetHemligaTalet.Functionality
             }
         }
 
-        public List<int> PreviousGuesses
+        public IEnumerable<int> PreviousGuesses
         {
-            get { return Session["PreviousGuesses"] as List<int>; }
-            private set { Session["PreviousGuesses"] = _previousGuesses; }
+            get { return _previousGuesses.AsReadOnly(); }
         }
 
         // Konstruktor som anropar initialiseringsmetoden
         public SecretNumber()
         {
+            _previousGuesses = new List<int>();
             Initialize();
         }
 
@@ -58,11 +57,10 @@ namespace _1._4.GissaDetHemligaTalet.Functionality
         {
             _number = new Random().Next(MinValueAllowed, MaxValueAllowed);
 
-            if (_previousGuesses != null)
+            if (Count != null)
             {
                 _previousGuesses.Clear();
             }
-            Count = 0;
         }
 
         // Metod som hanterar gissning och returnerar resultatet
@@ -74,7 +72,6 @@ namespace _1._4.GissaDetHemligaTalet.Functionality
             }
             else
             {
-                Count += 1;
                 throw new ArgumentOutOfRangeException("Talet måste vara mellan 1 och 100!");
             }
         }
@@ -101,7 +98,7 @@ namespace _1._4.GissaDetHemligaTalet.Functionality
                 }
 
                 // Loopa igenom tidigare gissningar för att se om anv. redan gissat på samma tal
-                if (_previousGuesses != null)
+                if (Count != null)
                 {
                     IEnumerable<int> guesses = PreviousGuesses;
 
@@ -120,7 +117,6 @@ namespace _1._4.GissaDetHemligaTalet.Functionality
             }
 
             AddGuess = guess;
-            Count += 1;
             return result;
         }
     }

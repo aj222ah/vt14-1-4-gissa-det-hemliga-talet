@@ -10,6 +10,24 @@ namespace _1._4.GissaDetHemligaTalet
 {
     public partial class Default : System.Web.UI.Page
     {
+        private SecretNumber _secretNumber;
+
+        public SecretNumber SecretNumber
+        {
+            get {
+                if (_secretNumber == null)
+                {
+                    _secretNumber = Session["SecretNumber"] as SecretNumber;
+                    if (_secretNumber == null)
+                    {
+                        _secretNumber = new SecretNumber();
+                        Session["SecretNumber"] = _secretNumber;
+                    }
+                }
+                return _secretNumber;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -19,23 +37,17 @@ namespace _1._4.GissaDetHemligaTalet
         {
             if (IsValid)
             {
-                if (Session["Game"] == null)
-                {
-                    SecretNumber game = new SecretNumber();
-                    Session["Game"] = game;
-                }
-                
-                var currentGame = (SecretNumber)Session["Game"];
                 var inputValue = int.Parse(CurrentGuess.Text);
-                var guessResult = currentGame.MakeGuess(inputValue);
+                var guessResult = SecretNumber.MakeGuess(inputValue);
 
+                // Kontrollerar resultatet av gissningen
                 switch (guessResult.ToString())
                 {
                     case "Low":
                         ResultLabel.Text = "Din gissning är lägre än det hemliga talet.";
                         break;
                     case "Correct":
-                        ResultLabel.Text = "Du har gissat rätt. Det tog dig " + currentGame.Count + " gissningar.";
+                        ResultLabel.Text = "Du har gissat rätt. Det tog dig " + SecretNumber.Count + " gissningar.";
                         CurrentGuess.Enabled = false;
                         GuessButton.Enabled = false;
                         RestartButton.Visible = true;
@@ -54,29 +66,32 @@ namespace _1._4.GissaDetHemligaTalet
                         break;
                 }
 
-                IEnumerable<int> prevGuesses = currentGame.PreviousGuesses;
-                var prevGuessesString = "";
-
-                if (prevGuesses != null)
+                // Kontrollera om det finns tidigare gissningar
+                if (SecretNumber.Count > 0 && guessResult.ToString() != "Correct")
                 {
+                    // Samla gissningarna i en sträng och visa den
+                    IEnumerable<int> prevGuesses = SecretNumber.PreviousGuesses;
+                    var prevGuessesString = "Tidigare gissningar: ";
+
                     foreach (var i in prevGuesses)
                     {
-                        prevGuessesString = i + ", ";
+                        prevGuessesString += String.Format("{0} ", i);
                     }
+
+                    PreviousGuessesLabel.Text = prevGuessesString;
+                    PreviousGuessesLabel.Visible = true;
                 }
 
-                PreviousGuessesLabel.Text = prevGuessesString;
-                PreviousGuessesLabel.Visible = true;
                 ResultLabel.Visible = true;
             }
-
         }
 
         protected void RestartButton_Click(object sender, EventArgs e)
         {
-            var newGame = (SecretNumber)Session["Game"];
-            newGame.Initialize();
+            // Nollställ SecretNumber
+            SecretNumber.Initialize();
 
+            // Återställ formuläret
             PreviousGuessesLabel.Text = "";
             PreviousGuessesLabel.Visible = true;
             ResultLabel.Text = "";
